@@ -3,6 +3,11 @@
 import unittest
 from lib.model import NodeManager
 from lib.model import Node
+from lib.model import NodeProfile
+from tests.fixtures import profiles
+from lib import conf
+
+conf.node_profiles = profiles.schema
 
 
 class FunctionalTest(unittest.TestCase):
@@ -11,21 +16,24 @@ class FunctionalTest(unittest.TestCase):
     def setUpClass(cls):
         cls.node_manager = NodeManager()
 
+    def test_get_default_node_profile(self):
+        profile = conf.get_current_node_profile()
+        self.assertIsInstance(profile, NodeProfile)
+
+    def test_get_root_node_from_path(self):
+        """Ao passar o path raiz deve retornar o root node"""
+
+        node = self.node_manager.search_by_path('/')
+        self.assertIsInstance(node, Node)
+        self.assertTrue(node.is_root)
+
     def test_list_root_node_from_path(self):
-        """Ao passar o path raiz deve retornar um array"""
+        """Ao passar o path raiz deve retornar um array com seus nodes filhos"""
 
-        result = self.node_manager.search_by_path('/')
-        self.assertIsInstance(result, Node)
-        pass
+        node = self.node_manager.search_by_path('/')
+        self.assertIsInstance(node, Node)
+        self.assertIsInstance(node.children, list)
+        self.assertGreater(len(node.children), 0)
+        self.assertEqual(node.children[0].path, '/folder_1/')
+        self.assertEqual(node.children[1].path, '/folder_2/')
 
-    #def test_root_nodes_as_test_profile(self):
-        #"""Os nós filhos devem ser aqueles que foram especificados"""
-
-        #result = self.node_manager.search_by_path('/')
-        #expected = [
-            #1,
-            #2,
-        #]
-
-        #self.assertEqual(result, expected)
-        #pass
