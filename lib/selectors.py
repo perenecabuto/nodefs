@@ -14,7 +14,7 @@ class Selector(object):
         return self._projection
 
     def get_nodes(self, abstract_node, node):
-        raise NotImplemented("You must implement get nodes to retrive nodes from somewhere")
+        raise NotImplemented("You must implement get nodes to retrieve nodes from somewhere")
 
 
 class StaticSelector(Selector):
