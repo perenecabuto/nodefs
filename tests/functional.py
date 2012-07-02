@@ -41,4 +41,4 @@ class FunctionalTest(unittest.TestCase):
 
         node = self.node_manager.search_by_path('/folder_1/')
         self.assertEqual(node.children[0].path, '/folder_1/folder_1.1/')
-        self.assertEqual(node.children[0].path, '/folder_1/folder_1.2/')
+        self.assertEqual(node.children[1].path, '/folder_1/folder_1.2/')

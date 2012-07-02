@@ -3,7 +3,7 @@
 import unittest
 from mock import mocksignature
 from lib.model import Node, AbstractNode, NodeProfile
-from lib.selectors import StaticSelector
+from lib.selectors.base import StaticSelector
 
 
 class TestNode(unittest.TestCase):

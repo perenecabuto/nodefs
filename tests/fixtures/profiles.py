@@ -1,6 +1,6 @@
 from lib.model import AbstractNode
 from lib.model import NodeProfile
-from lib.selectors import StaticSelector
+from lib.selectors.base import StaticSelector
 
 schema = {
     'default': NodeProfile(
@@ -13,6 +13,21 @@ schema = {
                         abstract_nodes=[
                             AbstractNode(
                                 selector=StaticSelector(projection='folder_1.1.1'),
+                            ),
+                            AbstractNode(
+                                selector=StaticSelector(projection='folder_1.1.2'),
+                            ),
+                        ]
+                    ),
+
+                    AbstractNode(
+                        selector=StaticSelector(projection='folder_1.2'),
+                        abstract_nodes=[
+                            AbstractNode(
+                                selector=StaticSelector(projection='folder_1.2.1'),
+                            ),
+                            AbstractNode(
+                                selector=StaticSelector(projection='folder_1.2.2'),
                             ),
                         ]
                     ),
