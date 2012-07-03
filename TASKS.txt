@@ -1,0 +1,6 @@
+- montar fs
+- django model fs
+- montar lista proposta no GO.txt
+- template HTML
+- adicionar arquivos
+- eventos para: crud de arquivo, alteração, ...
