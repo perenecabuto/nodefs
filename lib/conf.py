@@ -14,8 +14,8 @@ def get_node_profile(profile_name=None):
 
 
 def get_root_abstract_node():
-    from lib.model import AbstractNode
-    from lib.selectors import StaticSelector
+    from model import AbstractNode
+    from selectors import StaticSelector
 
     return AbstractNode(
         selector=StaticSelector(''),
@@ -24,7 +24,7 @@ def get_root_abstract_node():
 
 
 def get_root_node():
-    from lib.model import Node
+    from model import Node
     return Node(
         pattern='',
         parent=None,
