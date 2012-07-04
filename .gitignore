@@ -4,3 +4,4 @@ log/*
 *.py[co]
 build
 pip-log.txt
+mnt/*

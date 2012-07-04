@@ -24,6 +24,9 @@ class NodeManager(object):
                 path_slice = splitted_path[idx]
                 node = node.get_child(pattern=path_slice)
 
+                if not node:
+                    break
+
         return node
 
 
@@ -113,7 +116,16 @@ class Node(object):
 
     def get_child(self, pattern):
         abstract_node = self.abstract_node.match_child(pattern)
-        return Node(parent=self, pattern=pattern, abstract_node=abstract_node)
+
+        if abstract_node:
+            return Node(parent=self, pattern=pattern, abstract_node=abstract_node)
+
+    @property
+    def id(self):
+        if not hasattr(self, '_id'):
+            self._id = long("".join(str(int(ord(l))) for l in list(self.pattern)))
+
+        return self._id
 
     @property
     def path(self):

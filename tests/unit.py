@@ -2,23 +2,30 @@
 
 import unittest
 from mock import mocksignature
+from fuse import Operations
+
 from lib.model import Node, AbstractNode, NodeProfile
 from lib.selectors.base import StaticSelector
+from lib.fs import NodeFS
 
 
 class TestNode(unittest.TestCase):
 
+    def setUp(self):
+        self.root_node = None
+        self.abstract_node_class = mocksignature(AbstractNode, AbstractNode)
+        self.abstract_node = self.abstract_node_class(self)
+
     def test_instance(self):
-        root_node = None
-        abstract_node_class = mocksignature(AbstractNode, AbstractNode)
-        abstract_node = abstract_node_class(self)
-        node = Node(
-            pattern='',
-            parent=root_node,
-            abstract_node=abstract_node,
-        )
+        node = Node(pattern='', parent=self.root_node, abstract_node=self.abstract_node)
 
         self.assertTrue(node)
+
+    def test_id(self):
+        node = Node(pattern='fakeid', parent=self.root_node, abstract_node=self.abstract_node)
+
+        self.assertIsInstance(node.id, long)
+        self.assertEqual(node.id, 10297107101105100L)
 
 
 class TestAbstractNode(unittest.TestCase):
@@ -38,7 +45,7 @@ class TestStaticSelector(unittest.TestCase):
         self.assertTrue(selector)
 
 
-class NodeProfileTest(unittest.TestCase):
+class TestNodeProfile(unittest.TestCase):
 
     def test_instance(self):
         node_profile = NodeProfile(
@@ -51,3 +58,12 @@ class NodeProfileTest(unittest.TestCase):
 
         self.assertTrue(node_profile)
         self.assertIsInstance(node_profile.abstract_nodes, list)
+
+
+class TestNodeFS(unittest.TestCase):
+
+    def def_instance(self):
+        nodefs = NodeFS()
+        self.assertIsInstance(nodefs, Operations)
+
+
