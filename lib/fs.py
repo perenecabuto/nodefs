@@ -17,16 +17,19 @@ class NodeFS(Operations, LoggingMixIn):
 
     def init(self, path):
         print "init path: %s" % (path,)
+
         self.node_manager = NodeManager()
 
     def create(self, path, mode):
         print "create"
 
-        node = None
+        splitted_path = path.split("/")
+        node_path = "/".join(splitted_path[:-1])
+        pattern = splitted_path[-1]
+        node = self.node_manager.search_by_path(node_path)
+        new_node = node.create_child_by_pattern(pattern, is_leaf=True)
 
-        dict(st_mode=(S_IFREG | mode), st_nlink=1, st_size=0, st_ctime=time(), st_mtime=time(), st_atime=time())
-
-        return node.id
+        return new_node.id
 
     def getattr(self, path, fh=None):
         print "getattr path: %s, fh: %s" % (path, fh)
@@ -36,8 +39,15 @@ class NodeFS(Operations, LoggingMixIn):
 
         if node:
             if node.is_leaf:
-                return dict(st_mode=(S_IFREG | 0644), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1, st_size=node.file.size)
+                # File
+                contentfile = node.open_contentfile()
+                contentfile.seek(0, 2)
+                file_size = contentfile.tell()
+                contentfile.close()
+
+                return dict(st_mode=(S_IFREG | 0644), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1, st_size=file_size)
             else:
+                # Dir
                 return dict(st_mode=(S_IFDIR | 0755), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1)
 
         raise FuseOSError(ENOENT)
@@ -49,9 +59,9 @@ class NodeFS(Operations, LoggingMixIn):
     def read(self, path, size, offset, fh):
         print "read ", path, " ", size, " ", offset, " ", fh
 
-        node = None
+        node = self.node_manager.search_by_path(path)
 
-        with node.file as f:
+        with node.open_contentfile() as f:
             f.seek(offset, 0)
             buf = f.read(size)
             f.close()

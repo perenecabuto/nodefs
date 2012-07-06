@@ -22,7 +22,7 @@ class NodeManager(object):
         if len(splitted_path):
             for idx in xrange(len(splitted_path)):
                 path_slice = splitted_path[idx]
-                node = node.get_child(pattern=path_slice)
+                node = node.build_child(pattern=path_slice)
 
                 if not node:
                     break
@@ -47,6 +47,19 @@ class AbstractNode(object):
         self.selector = selector
         self.abstract_nodes = abstract_nodes
 
+    @property
+    def is_leaf_generator(self):
+        return self.selector.is_leaf_generator
+
+    @property
+    def weight(self):
+        return self.selector.weight
+
+    @property
+    def abstract_nodes_by_weight(self):
+        from operator import attrgetter
+        return sorted(self.abstract_nodes, key=attrgetter('weight'))
+
     def match_child(self, pattern):
         abstract_node = None
 
@@ -60,15 +73,6 @@ class AbstractNode(object):
 
         return abstract_node
 
-    @property
-    def weight(self):
-        return self.selector.weight
-
-    @property
-    def abstract_nodes_by_weight(self):
-        from operator import attrgetter
-        return sorted(self.abstract_nodes, key=attrgetter('weight'))
-
     def matches_node_pattern(self, pattern):
         return self.selector.matches_node_pattern(self, pattern)
 
@@ -79,6 +83,9 @@ class AbstractNode(object):
             nodes += abstract_node.get_nodes(parent_node=node)
 
         return nodes
+
+    def open_node_contentfile(self, node):
+        return self.selector.open_node_contentfile(node)
 
     def get_nodes(self, parent_node):
         return self.selector.get_nodes(self, parent_node)
@@ -102,7 +109,7 @@ class Node(object):
     is_root = False
     is_leaf = False
 
-    def __init__(self, pattern, parent, abstract_node, is_root=False):
+    def __init__(self, pattern, parent, abstract_node, is_root=False, is_leaf=False):
         if not isinstance(abstract_node, AbstractNode):
             raise TypeError('abstract_node should be an AbstractNode')
 
@@ -110,15 +117,10 @@ class Node(object):
         self.parent = parent
         self.abstract_node = abstract_node
         self.is_root = is_root
+        self.is_leaf = is_leaf
 
     def __unicode__(self):
         return "(%s) %s" % (self.abstract_node, self.pattern)
-
-    def get_child(self, pattern):
-        abstract_node = self.abstract_node.match_child(pattern)
-
-        if abstract_node:
-            return Node(parent=self, pattern=pattern, abstract_node=abstract_node)
 
     @property
     def id(self):
@@ -143,3 +145,14 @@ class Node(object):
     @property
     def children(self):
         return self.abstract_node.get_children_of_node(self)
+
+    def build_child(self, pattern):
+        abstract_node = self.abstract_node.match_child(pattern)
+
+        if not abstract_node:
+            return None
+
+        return Node(parent=self, pattern=pattern, abstract_node=abstract_node, is_leaf=abstract_node.is_leaf_generator)
+
+    def open_contentfile(self):
+        return self.abstract_node.open_node_contentfile(self)

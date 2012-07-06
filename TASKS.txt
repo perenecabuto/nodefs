@@ -1,6 +1,17 @@
 - montar fs
+    - passar parametro para definir o esquema de montagem
+      - export NODEFS_PROFILE_PATH=profile
+
+- abrir arquivos
+- adicionar arquivos
+- remover arquivos
+
 - django model fs
+    - Estrutura base - ok
+    - Descobrir caminhos para outros models
+    - Consulta aninhada
+
 - montar lista proposta no GO.txt
 - template HTML
-- adicionar arquivos
-- eventos para: crud de arquivo, alteração, ...
+- eventos para: crud de arquivo, atualizacao, ...
+- NotificationSelector (pega mensagens de um nó e projeta como notification.txt)

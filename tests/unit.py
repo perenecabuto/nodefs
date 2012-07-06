@@ -12,30 +12,58 @@ from lib.fs import NodeFS
 class TestNode(unittest.TestCase):
 
     def setUp(self):
-        self.root_node = None
-        self.abstract_node_class = mocksignature(AbstractNode, AbstractNode)
-        self.abstract_node = self.abstract_node_class(self)
+        abstract_node_class = mocksignature(AbstractNode, AbstractNode)
+        selector_class = mocksignature(StaticSelector, StaticSelector)
+
+        self.abstract_node = abstract_node_class(self)
+        self.abstract_node.selector = selector_class(self)
+        self.root_node = Node(pattern='', parent=None, abstract_node=self.abstract_node)
 
     def test_instance(self):
-        node = Node(pattern='', parent=self.root_node, abstract_node=self.abstract_node)
-
-        self.assertTrue(node)
+        self.assertIsInstance(self.root_node, Node)
 
     def test_id(self):
-        node = Node(pattern='fakeid', parent=self.root_node, abstract_node=self.abstract_node)
+        node = Node(pattern='folder', parent=self.root_node, abstract_node=self.abstract_node)
 
         self.assertIsInstance(node.id, long)
-        self.assertEqual(node.id, 10297107101105100L)
+        self.assertEqual(node.id, 102111108100101114L)
+
+    def test_path(self):
+        node = Node(pattern='folder', parent=self.root_node, abstract_node=self.abstract_node)
+        self.assertIsInstance(node.path, str)
+
+    def test_build_child(self):
+        Node(pattern='folder', parent=self.root_node, abstract_node=self.abstract_node)
+        self.abstract_node.match_child = lambda obj: self.abstract_node
+
+        self.assertIsInstance(self.root_node.build_child('folder'), Node)
+
+    def test_children(self):
+        node = Node(pattern='', parent=self.root_node, abstract_node=self.abstract_node)
+        self.assertIsInstance(node.children, list)
+
+    def test_open_content_file(self):
+        node = Node(pattern='', parent=self.root_node, abstract_node=self.abstract_node)
+        self.abstract_node.open_node_contentfile = lambda node: open('/etc/passwd')
+
+        contentfile = node.open_contentfile()
+        self.assertIsInstance(contentfile, file)
+        contentfile.close()
 
 
 class TestAbstractNode(unittest.TestCase):
 
     def test_instance(self):
-        abs_node = AbstractNode(
-            selector=StaticSelector('')
-        )
+        abs_node = AbstractNode(selector=StaticSelector(''))
 
         self.assertTrue(abs_node)
+
+    def test_open_node_contentfile(self):
+        abs_node = AbstractNode(selector=StaticSelector(''))
+        abs_node.open_node_contentfile = lambda node: open('/etc/passwd')
+        node = mocksignature(Node, Node)
+
+        self.assertIsInstance(abs_node.open_node_contentfile(node), file)
 
 
 class TestStaticSelector(unittest.TestCase):
@@ -43,6 +71,18 @@ class TestStaticSelector(unittest.TestCase):
     def test_instance(self):
         selector = StaticSelector('')
         self.assertTrue(selector)
+
+    def test_open_node_contentfile(self):
+        test_fh = open('/etc/passwd')
+        selector = StaticSelector(projection='', contentfile_path=test_fh.name)
+        abs_node = AbstractNode(selector=selector)
+        node = mocksignature(Node, Node)
+        node.is_leaf = True
+
+        contentfile = abs_node.open_node_contentfile(node)
+
+        self.assertIsInstance(contentfile, file)
+        self.assertEqual(contentfile.read(), test_fh.read())
 
 
 class TestNodeProfile(unittest.TestCase):
@@ -65,5 +105,4 @@ class TestNodeFS(unittest.TestCase):
     def def_instance(self):
         nodefs = NodeFS()
         self.assertIsInstance(nodefs, Operations)
-
 

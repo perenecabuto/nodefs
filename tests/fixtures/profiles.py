@@ -2,6 +2,8 @@ from lib.model import AbstractNode
 from lib.model import NodeProfile
 from lib.selectors.base import StaticSelector
 
+import os
+
 schema = {
     'default': NodeProfile(
         abstract_nodes=[
@@ -16,6 +18,12 @@ schema = {
                             ),
                             AbstractNode(
                                 selector=StaticSelector(projection='folder_1.1.2'),
+                            ),
+                            AbstractNode(
+                                selector=StaticSelector(
+                                    projection='contentfile.txt',
+                                    contentfile_path=os.path.dirname(__file__) + "/contentfile.txt",
+                                ),
                             ),
                         ]
                     ),

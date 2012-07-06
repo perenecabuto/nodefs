@@ -37,8 +37,12 @@ class FunctionalTest(unittest.TestCase):
         self.assertEqual(node.children[0].path, '/folder_1/')
         self.assertEqual(node.children[1].path, '/folder_2/')
 
-    def test_get_secound_level_node_children(self):
-
+    def test_get_second_level_node_children(self):
         node = self.node_manager.search_by_path('/folder_1/')
         self.assertEqual(node.children[0].path, '/folder_1/folder_1.1/')
         self.assertEqual(node.children[1].path, '/folder_1/folder_1.2/')
+
+    def test_get_file_nodes_content(self):
+        node = self.node_manager.search_by_path('/folder_1/folder_1.1/contentfile.txt')
+
+        self.assertEqual(node.open_contentfile().read(), 'this is the content of contentfile.txt\n')
