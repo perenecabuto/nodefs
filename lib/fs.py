@@ -40,12 +40,7 @@ class NodeFS(Operations, LoggingMixIn):
         if node:
             if node.is_leaf:
                 # File
-                contentfile = node.open_contentfile()
-                contentfile.seek(0, 2)
-                file_size = contentfile.tell()
-                contentfile.close()
-
-                return dict(st_mode=(S_IFREG | 0644), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1, st_size=file_size)
+                return dict(st_mode=(S_IFREG | 0644), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1, st_size=node.contents_length)
             else:
                 # Dir
                 return dict(st_mode=(S_IFDIR | 0755), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1)
@@ -61,12 +56,7 @@ class NodeFS(Operations, LoggingMixIn):
 
         node = self.node_manager.search_by_path(path)
 
-        with node.open_contentfile() as f:
-            f.seek(offset, 0)
-            buf = f.read(size)
-            f.close()
-
-        return buf
+        return node.read_contents(size, offset)
 
     def readdir(self, path, fh):
         print "readdir path:", path
@@ -89,12 +79,6 @@ class NodeFS(Operations, LoggingMixIn):
 
         return dict(f_bsize=512, f_blocks=4096, f_bavail=2048)
 
-    def truncate(self, path, length, fh=None):
-        print "truncate"
-
-        self.data[path] = self.data[path][:length]
-        self.files[path]['st_size'] = length
-
     def unlink(self, path):
         print "unlink"
 
@@ -108,10 +92,13 @@ class NodeFS(Operations, LoggingMixIn):
         self.files[path]['st_atime'] = atime
         self.files[path]['st_mtime'] = mtime
 
-    def write(self, path, data, offset, fh):
-        print "write"
+    def truncate(self, path, length, fh=None):
+        print "truncate ", path, " ", length, " ", fh
 
-        self.data[path] = self.data[path][:offset] + data
-        self.files[path]['st_size'] = len(self.data[path])
+    def write(self, path, data, offset, fh):
+        print "read ", path, " ", offset, " ", fh
+
+        node = self.node_manager.search_by_path(path)
+        node.write_contents(data)
 
         return len(data)

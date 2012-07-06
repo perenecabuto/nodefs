@@ -45,4 +45,4 @@ class FunctionalTest(unittest.TestCase):
     def test_get_file_nodes_content(self):
         node = self.node_manager.search_by_path('/folder_1/folder_1.1/contentfile.txt')
 
-        self.assertEqual(node.open_contentfile().read(), 'this is the content of contentfile.txt\n')
+        self.assertEqual(node.read_contents(), 'this is the content of contentfile.txt\n')

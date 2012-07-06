@@ -15,8 +15,8 @@ class Selector(object):
     def matches_node_pattern(self, abstract_node, pattern):
         raise NotImplemented("You must implement matches_node_pattern to check if the pattern can be from this selector")
 
-    def open_contentfile(self, node):
-        raise NotImplemented("You must implement ->open_contentfile<- to get contents of a leaf node")
+    def read_node_contents(self, node, mode):
+        raise NotImplemented("You must implement ->read_node_contents<- to get contents of a leaf node")
 
 
 class StaticSelector(Selector):
@@ -43,6 +43,31 @@ class StaticSelector(Selector):
             )
         ]
 
-    def open_node_contentfile(self, node):
+    def read_node_contents(self, node, size=-1, offset=0):
+        contents = ''
+
         if node.is_leaf and self.is_leaf_generator:
-            return open(self.contentfile_path)
+            f = open(self.contentfile_path, 'r')
+            f.seek(offset)
+            contents = f.read(size)
+            f.close()
+
+        return contents
+
+    def write_node_contents(self, node, data):
+        f = open(self.contentfile_path, 'w')
+        f.write(data)
+        f.close()
+
+    def append_node_contents(self, node, data):
+        f = open(self.contentfile_path, 'a')
+        f.write(data)
+        f.close()
+
+    def node_contents_length(self, node):
+        f = open(self.contentfile_path, 'a')
+        f.seek(0, 2)
+        size = f.tell()
+        f.close()
+
+        return size

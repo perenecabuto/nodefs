@@ -42,13 +42,12 @@ class TestNode(unittest.TestCase):
         node = Node(pattern='', parent=self.root_node, abstract_node=self.abstract_node)
         self.assertIsInstance(node.children, list)
 
-    def test_open_content_file(self):
+    def test_read_contents(self):
         node = Node(pattern='', parent=self.root_node, abstract_node=self.abstract_node)
-        self.abstract_node.open_node_contentfile = lambda node: open('/etc/passwd')
+        self.abstract_node.read_node_contents = lambda node, size, offset: open('/etc/passwd').read()
 
-        contentfile = node.open_contentfile()
-        self.assertIsInstance(contentfile, file)
-        contentfile.close()
+        contents = node.read_contents()
+        self.assertIsInstance(contents, str)
 
 
 class TestAbstractNode(unittest.TestCase):
@@ -58,12 +57,12 @@ class TestAbstractNode(unittest.TestCase):
 
         self.assertTrue(abs_node)
 
-    def test_open_node_contentfile(self):
+    def test_read_node_contents(self):
         abs_node = AbstractNode(selector=StaticSelector(''))
-        abs_node.open_node_contentfile = lambda node: open('/etc/passwd')
+        abs_node.read_node_contents = lambda node: open('/etc/passwd').read()
         node = mocksignature(Node, Node)
 
-        self.assertIsInstance(abs_node.open_node_contentfile(node), file)
+        self.assertIsInstance(abs_node.read_node_contents(node), str)
 
 
 class TestStaticSelector(unittest.TestCase):
@@ -72,17 +71,17 @@ class TestStaticSelector(unittest.TestCase):
         selector = StaticSelector('')
         self.assertTrue(selector)
 
-    def test_open_node_contentfile(self):
+    def test_read_node_contents(self):
         test_fh = open('/etc/passwd')
         selector = StaticSelector(projection='', contentfile_path=test_fh.name)
         abs_node = AbstractNode(selector=selector)
         node = mocksignature(Node, Node)
         node.is_leaf = True
 
-        contentfile = abs_node.open_node_contentfile(node)
+        contents = abs_node.read_node_contents(node)
 
-        self.assertIsInstance(contentfile, file)
-        self.assertEqual(contentfile.read(), test_fh.read())
+        self.assertIsInstance(contents, str)
+        self.assertEqual(contents, test_fh.read())
 
 
 class TestNodeProfile(unittest.TestCase):

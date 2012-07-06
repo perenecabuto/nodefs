@@ -84,8 +84,11 @@ class AbstractNode(object):
 
         return nodes
 
-    def open_node_contentfile(self, node):
-        return self.selector.open_node_contentfile(node)
+    def read_node_contents(self, node, size=-1, offset=0):
+        return self.selector.read_node_contents(node, size, offset)
+
+    def node_contents_length(self, node):
+        return self.selector.node_contents_length(node)
 
     def get_nodes(self, parent_node):
         return self.selector.get_nodes(self, parent_node)
@@ -154,5 +157,15 @@ class Node(object):
 
         return Node(parent=self, pattern=pattern, abstract_node=abstract_node, is_leaf=abstract_node.is_leaf_generator)
 
-    def open_contentfile(self):
-        return self.abstract_node.open_node_contentfile(self)
+    def read_contents(self, size=-1, offset=0):
+        return self.abstract_node.read_node_contents(self, size, offset)
+
+    def write_contents(self, data):
+        self.abstract_node.write_node_contents(self, data)
+
+    def append_contents(self, data):
+        self.abstract_node.append_node_contents(self, data)
+
+    @property
+    def contents_length(self):
+        return self.abstract_node.node_contents_length(self)
