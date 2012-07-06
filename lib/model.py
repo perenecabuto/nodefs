@@ -87,8 +87,8 @@ class AbstractNode(object):
     def read_node_contents(self, node, size=-1, offset=0):
         return self.selector.read_node_contents(node, size, offset)
 
-    def write_node_contents(self, node, data):
-        return self.selector.write_node_contents(node, data)
+    def write_node_contents(self, node, data, reset=False):
+        return self.selector.write_node_contents(node, data, reset)
 
     def append_node_contents(self, node, data):
         return self.selector.append_node_contents(node, data)
@@ -166,11 +166,8 @@ class Node(object):
     def read_contents(self, size=-1, offset=0):
         return self.abstract_node.read_node_contents(self, size, offset)
 
-    def write_contents(self, data):
-        self.abstract_node.write_node_contents(self, data)
-
-    def append_contents(self, data):
-        self.abstract_node.append_node_contents(self, data)
+    def write_contents(self, data, reset=False):
+        self.abstract_node.write_node_contents(self, data, reset)
 
     @property
     def contents_length(self):

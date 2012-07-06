@@ -46,25 +46,6 @@ class NodeFS(Operations, LoggingMixIn):
 
         raise FuseOSError(ENOENT)
 
-    def read(self, path, size, offset, fh):
-        print "read ", path, " ", size, " ", offset, " ", fh
-
-        node = self.node_manager.search_by_path(path)
-
-        return node.read_contents(size, offset)
-
-    def write(self, path, data, offset, fh):
-        print "write ", path, " ", offset, " ", fh
-
-        node = self.node_manager.search_by_path(path)
-
-        if offset == 0:
-            node.write_contents(data)
-        else:
-            node.append_contents(data)
-
-        return len(data)
-
     def readdir(self, path, fh):
         print "readdir path:", path
 
@@ -74,6 +55,20 @@ class NodeFS(Operations, LoggingMixIn):
         dir_content += [n.pattern for n in node.children]
 
         return dir_content
+
+    def read(self, path, size, offset, fh):
+        print "read ", path, " ", size, " ", offset, " ", fh
+        node = self.node_manager.search_by_path(path)
+
+        return node.read_contents(size, offset)
+
+    def write(self, path, data, offset, fh):
+        print "write ", path, " ", offset, " ", fh
+
+        node = self.node_manager.search_by_path(path)
+        node.write_contents(data, reset=offset == 0)
+
+        return len(data)
 
     def setxattr(self, path, name, value, options, position=0):
         print "setxattr"

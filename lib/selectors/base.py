@@ -18,6 +18,12 @@ class Selector(object):
     def read_node_contents(self, node, mode):
         raise NotImplemented("You must implement ->read_node_contents<- to get contents of a leaf node")
 
+    def write_node_contents(self, node, data, reset=False):
+        raise NotImplemented("You must implement ->write_node_contents<- to write contents of a leaf node")
+
+    def node_contents_length(self, node):
+        raise NotImplemented("You must implement ->node_contents_length<- to get contents length of a leaf node")
+
 
 class StaticSelector(Selector):
 
@@ -54,13 +60,13 @@ class StaticSelector(Selector):
 
         return contents
 
-    def write_node_contents(self, node, data):
-        f = open(self.contentfile_path, 'w')
-        f.write(data)
-        f.close()
+    def write_node_contents(self, node, data, reset=False):
+        file_mode = 'a'
 
-    def append_node_contents(self, node, data):
-        f = open(self.contentfile_path, 'a')
+        if reset:
+            file_mode = 'w'
+
+        f = open(self.contentfile_path, file_mode)
         f.write(data)
         f.close()
 
