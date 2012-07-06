@@ -13,7 +13,6 @@ from lib.model import NodeManager
 
 
 class NodeFS(Operations, LoggingMixIn):
-    """ blah blah blah """
 
     def init(self, path):
         print "init path: %s" % (path,)
@@ -47,16 +46,24 @@ class NodeFS(Operations, LoggingMixIn):
 
         raise FuseOSError(ENOENT)
 
-    def open(self, path, flags):
-        print "open"
-        return 1
-
     def read(self, path, size, offset, fh):
         print "read ", path, " ", size, " ", offset, " ", fh
 
         node = self.node_manager.search_by_path(path)
 
         return node.read_contents(size, offset)
+
+    def write(self, path, data, offset, fh):
+        print "write ", path, " ", offset, " ", fh
+
+        node = self.node_manager.search_by_path(path)
+
+        if offset == 0:
+            node.write_contents(data)
+        else:
+            node.append_contents(data)
+
+        return len(data)
 
     def readdir(self, path, fh):
         print "readdir path:", path
@@ -92,17 +99,3 @@ class NodeFS(Operations, LoggingMixIn):
         self.files[path]['st_atime'] = atime
         self.files[path]['st_mtime'] = mtime
 
-    def truncate(self, path, length, fh=None):
-        print "truncate ", path, " ", length, " ", fh
-
-    def write(self, path, data, offset, fh):
-        print "write ", path, " ", offset, " ", fh
-
-        node = self.node_manager.search_by_path(path)
-
-        if offset == 0:
-            node.write_contents(data)
-        else:
-            node.append_contents(data)
-
-        return len(data)
