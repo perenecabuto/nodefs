@@ -87,6 +87,12 @@ class AbstractNode(object):
     def read_node_contents(self, node, size=-1, offset=0):
         return self.selector.read_node_contents(node, size, offset)
 
+    def write_node_contents(self, node, data):
+        return self.selector.write_node_contents(node, data)
+
+    def append_node_contents(self, node, data):
+        return self.selector.append_node_contents(node, data)
+
     def node_contents_length(self, node):
         return self.selector.node_contents_length(node)
 

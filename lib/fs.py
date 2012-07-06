@@ -96,9 +96,13 @@ class NodeFS(Operations, LoggingMixIn):
         print "truncate ", path, " ", length, " ", fh
 
     def write(self, path, data, offset, fh):
-        print "read ", path, " ", offset, " ", fh
+        print "write ", path, " ", offset, " ", fh
 
         node = self.node_manager.search_by_path(path)
-        node.write_contents(data)
+
+        if offset == 0:
+            node.write_contents(data)
+        else:
+            node.append_contents(data)
 
         return len(data)

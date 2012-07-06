@@ -65,7 +65,7 @@ class StaticSelector(Selector):
         f.close()
 
     def node_contents_length(self, node):
-        f = open(self.contentfile_path, 'a')
+        f = open(self.contentfile_path, 'r')
         f.seek(0, 2)
         size = f.tell()
         f.close()
