@@ -46,3 +46,14 @@ class FunctionalTest(unittest.TestCase):
         node = self.node_manager.search_by_path('/folder_1/folder_1.1/contentfile.txt')
 
         self.assertEqual(node.read_contents(), 'this is the content of contentfile.txt\n')
+
+    def test_add_file(self):
+        node = self.node_manager.search_by_path('/folder_1/folder_1.1/')
+
+        new_node = node.create_child_by_pattern('test_file_1.txt')
+        self.assertIn(new_node, node.children)
+
+        new_node.write_contents("test file contents")
+
+        gotten_node_contents = self.node_manager.search_by_path(new_node.path).contents
+        self.assertEqual(new_node.contents, gotten_node_contents)

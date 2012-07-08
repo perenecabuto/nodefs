@@ -24,17 +24,22 @@ class Selector(object):
     def node_contents_length(self, node):
         raise NotImplemented("You must implement ->node_contents_length<- to get contents length of a leaf node")
 
+    def add_node(self, node):
+        raise NotImplemented("You must implement ->add_node<-")
+
 
 class StaticSelector(Selector):
 
     weight = weights.EXTRA_LIGHT
-    contentfile_path = None
     projection = ''
 
     def __init__(self, projection, contentfile_path=None):
         self.projection = projection
         self.contentfile_path = contentfile_path
         self.is_leaf_generator = bool(contentfile_path)
+
+    def __str__(self):
+        return type(self).__name__
 
     def matches_node_pattern(self, abstract_node, pattern):
         return pattern == self.projection
@@ -77,3 +82,31 @@ class StaticSelector(Selector):
         f.close()
 
         return size
+
+
+class MemorySelector(Selector):
+
+    weight = weights.LIGHT
+    is_leaf_generator = True
+    cached_nodes = {}
+
+    def get_nodes(self, abstract_node, node=None):
+        return [
+            Node(pattern=p, parent=node, abstract_node=abstract_node, is_leaf=self.is_leaf_generator)
+            for p in self.cached_nodes.keys()
+        ]
+
+    def matches_node_pattern(self, abstract_node, pattern):
+        return pattern in self.cached_nodes.keys()
+
+    def read_node_contents(self, node, size=-1, offset=0):
+        return self.cached_nodes.get(node.pattern, '')
+
+    def write_node_contents(self, node, data, reset=False):
+        self.cached_nodes[node.pattern] = data
+
+    def node_contents_length(self, node):
+        return len(self.cached_nodes.get(node.pattern, '') or '')
+
+    def add_node(self, node):
+        self.cached_nodes[node.pattern] = None

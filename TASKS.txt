@@ -2,7 +2,10 @@
     - passar parametro para definir o esquema de montagem
       - export NODEFS_PROFILE_PATH=profile
 
-- abrir arquivos
+- abrir arquivos - ok
+    - ler - ok
+    - escrever - ok
+
 - adicionar arquivos
 - remover arquivos
 
@@ -10,6 +13,7 @@
     - Estrutura base - ok
     - Descobrir caminhos para outros models
     - Consulta aninhada
+    - Nó arquivo
 
 - montar lista proposta no GO.txt
 - template HTML

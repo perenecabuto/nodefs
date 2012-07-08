@@ -2,21 +2,22 @@
 Deve ter um comando tree que imprime uma lista como a que segue abaixo
 
 ├── mes_atual/
-├── aluguel (pago)/
-|   ├── bervel_xxx.pdf
+|   ├── aluguel (pago)/
+|   | └── bervel_xxx.pdf
 |   ├── celular (vence dia 3)/
-├── | conta_05012012.pdf
+|   | └── conta_05012012.pdf
 |   └── luz (pendente de pagamento)/
-├── | nao_possui_controle_de_arquivo.txt
+|   | └── nao_possui_controle_de_arquivo.txt
 |   └── telefone (aguardando carregamento de arquivo)/
+|
 └── mes_anteior (maio)/
   └── abril/
     ├── aluguel (pago)/
     | ├── report.txt
     | └── bervel_xxx.pdf
     ├── celular (pago)/
-    |  ├── report.txt
-    |  └── conta_05052012.pdf
+    | ├── report.txt
+    | └── conta_05052012.pdf
     └── luz (pago)/
     | ├── report.txt
     | └── nao_possui_controle_de_arquivo.txt

@@ -20,15 +20,15 @@ class NodeFS(Operations, LoggingMixIn):
         self.node_manager = NodeManager()
 
     def create(self, path, mode):
-        print "create"
+        print "create ", path, " ", mode
 
         splitted_path = path.split("/")
         node_path = "/".join(splitted_path[:-1])
         pattern = splitted_path[-1]
         node = self.node_manager.search_by_path(node_path)
-        new_node = node.create_child_by_pattern(pattern, is_leaf=True)
+        node.create_child_by_pattern(pattern, is_leaf=True)
 
-        return new_node.id
+        return node.id
 
     def getattr(self, path, fh=None):
         print "getattr path: %s, fh: %s" % (path, fh)
@@ -39,10 +39,10 @@ class NodeFS(Operations, LoggingMixIn):
         if node:
             if node.is_leaf:
                 # File
-                return dict(st_mode=(S_IFREG | 0644), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1, st_size=node.contents_length)
+                return dict(st_mode=(S_IFREG | 0666), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1, st_size=node.contents_length)
             else:
                 # Dir
-                return dict(st_mode=(S_IFDIR | 0755), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1)
+                return dict(st_mode=(S_IFDIR | 0777), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1)
 
         raise FuseOSError(ENOENT)
 
@@ -80,6 +80,15 @@ class NodeFS(Operations, LoggingMixIn):
         print "statfs"
 
         return dict(f_bsize=512, f_blocks=4096, f_bavail=2048)
+
+    def mkdir(self, path, mode):
+        print "mkdir ", path, " ", mode
+
+        splitted_path = path.split("/")
+        node_path = "/".join(splitted_path[:-1])
+        pattern = splitted_path[-1]
+        node = self.node_manager.search_by_path(node_path)
+        node.create_child_by_pattern(pattern, is_leaf=False)
 
     def unlink(self, path):
         print "unlink"

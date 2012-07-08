@@ -40,12 +40,17 @@ class NodeProfile(object):
 
 class AbstractNode(object):
 
+    writable = False
     selector = None
     abstract_nodes = []
 
-    def __init__(self, selector, abstract_nodes=[]):
+    def __init__(self, selector, abstract_nodes=[], writable=writable):
         self.selector = selector
         self.abstract_nodes = abstract_nodes
+        self.writable = writable
+
+    def __str__(self):
+        return str(self.selector)
 
     @property
     def is_leaf_generator(self):
@@ -55,20 +60,27 @@ class AbstractNode(object):
     def weight(self):
         return self.selector.weight
 
-    @property
-    def abstract_nodes_by_weight(self):
+    def abstract_nodes_by_weight(self, only_writables=False):
         from operator import attrgetter
-        return sorted(self.abstract_nodes, key=attrgetter('weight'))
 
-    def match_child(self, pattern):
+        abstract_nodes = [
+            abn
+            for abn in self.abstract_nodes
+            if not only_writables or abn.writable == only_writables
+        ]
+
+        return sorted(abstract_nodes, key=attrgetter('weight'))
+
+    def match_child(self, pattern, only_writables=False):
         abstract_node = None
+        abstract_nodes = self.abstract_nodes_by_weight(only_writables=only_writables)
 
-        if len(self.abstract_nodes) == 1:
+        if len(abstract_nodes) == 1:
             abstract_node = self.abstract_nodes[0]
         else:
-            for ab in self.abstract_nodes_by_weight:
-                if ab.matches_node_pattern(pattern):
-                    abstract_node = ab
+            for an in abstract_nodes:
+                if an.matches_node_pattern(pattern):
+                    abstract_node = an
                     break
 
         return abstract_node
@@ -84,20 +96,23 @@ class AbstractNode(object):
 
         return nodes
 
+    def add_node(self, node):
+        return node.abstract_node.selector.add_node(node)
+
     def read_node_contents(self, node, size=-1, offset=0):
         return self.selector.read_node_contents(node, size, offset)
-
-    def write_node_contents(self, node, data, reset=False):
-        return self.selector.write_node_contents(node, data, reset)
-
-    def append_node_contents(self, node, data):
-        return self.selector.append_node_contents(node, data)
 
     def node_contents_length(self, node):
         return self.selector.node_contents_length(node)
 
     def get_nodes(self, parent_node):
         return self.selector.get_nodes(self, parent_node)
+
+    def write_node_contents(self, node, data, reset=False):
+        if not self.selector.is_leaf_generator:
+            raise TypeError("Node(%s) is not writable" % node)
+
+        return self.selector.write_node_contents(node, data, reset)
 
     def get_node(self, parent_node, pattern):
         node = None
@@ -128,13 +143,16 @@ class Node(object):
         self.is_root = is_root
         self.is_leaf = is_leaf
 
-    def __unicode__(self):
+    def __str__(self):
         return "(%s) %s" % (self.abstract_node, self.pattern)
+
+    def __eq__(self, other):
+        return isinstance(other, Node) and self.id == other.id
 
     @property
     def id(self):
         if not hasattr(self, '_id'):
-            self._id = long("".join(str(int(ord(l))) for l in list(self.pattern)))
+            self._id = long("".join(str(int(ord(l))) for l in list(self.path)))
 
         return self._id
 
@@ -155,6 +173,14 @@ class Node(object):
     def children(self):
         return self.abstract_node.get_children_of_node(self)
 
+    @property
+    def contents_length(self):
+        return self.abstract_node.node_contents_length(self)
+
+    @property
+    def contents(self):
+        return self.read_contents()
+
     def build_child(self, pattern):
         abstract_node = self.abstract_node.match_child(pattern)
 
@@ -169,6 +195,14 @@ class Node(object):
     def write_contents(self, data, reset=False):
         self.abstract_node.write_node_contents(self, data, reset)
 
-    @property
-    def contents_length(self):
-        return self.abstract_node.node_contents_length(self)
+    def create_child_by_pattern(self, pattern, is_leaf=True):
+        abstract_node = self.abstract_node.match_child(pattern, only_writables=True)
+
+        if not abstract_node:
+            return None
+
+        node = Node(parent=self, pattern=pattern, abstract_node=abstract_node, is_leaf=abstract_node.is_leaf_generator)
+        node.is_leaf = is_leaf
+        self.abstract_node.add_node(node)
+
+        return node

@@ -26,7 +26,7 @@ class TestNode(unittest.TestCase):
         node = Node(pattern='folder', parent=self.root_node, abstract_node=self.abstract_node)
 
         self.assertIsInstance(node.id, long)
-        self.assertEqual(node.id, 102111108100101114L)
+        self.assertEqual(node.id, 4710211110810010111447L)
 
     def test_path(self):
         node = Node(pattern='folder', parent=self.root_node, abstract_node=self.abstract_node)
