@@ -103,10 +103,13 @@ class MemorySelector(Selector):
         return self.cached_nodes.get(node.pattern, '')
 
     def write_node_contents(self, node, data, reset=False):
-        self.cached_nodes[node.pattern] = data
+        if reset:
+            self.cached_nodes[node.pattern] = ''
+
+        self.cached_nodes[node.pattern] += data
 
     def node_contents_length(self, node):
         return len(self.cached_nodes.get(node.pattern, '') or '')
 
     def add_node(self, node):
-        self.cached_nodes[node.pattern] = None
+        self.cached_nodes[node.pattern] = ''

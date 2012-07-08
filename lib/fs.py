@@ -39,10 +39,10 @@ class NodeFS(Operations, LoggingMixIn):
         if node:
             if node.is_leaf:
                 # File
-                return dict(st_mode=(S_IFREG | 0666), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1, st_size=node.contents_length)
+                return dict(st_mode=(S_IFREG | 0o644), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1, st_size=node.contents_length)
             else:
                 # Dir
-                return dict(st_mode=(S_IFDIR | 0777), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1)
+                return dict(st_mode=(S_IFDIR | 0o755), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=2)
 
         raise FuseOSError(ENOENT)
 
@@ -69,6 +69,9 @@ class NodeFS(Operations, LoggingMixIn):
         node.write_contents(data, reset=offset == 0)
 
         return len(data)
+
+    def truncate(self, path, length, fh=None):
+        print "truncate ", path, " ", length, " ", fh
 
     def setxattr(self, path, name, value, options, position=0):
         print "setxattr"
@@ -102,4 +105,3 @@ class NodeFS(Operations, LoggingMixIn):
         atime, mtime = times if times else (now, now)
         self.files[path]['st_atime'] = atime
         self.files[path]['st_mtime'] = mtime
-
