@@ -6,7 +6,7 @@
     - ler - ok
     - escrever - ok
 
-- adicionar arquivos
+- adicionar arquivos - ok
 - remover arquivos
 
 - django model fs
@@ -14,6 +14,7 @@
     - Descobrir caminhos para outros models
     - Consulta aninhada
     - Nó arquivo
+    - adicionar nó
 
 - montar lista proposta no GO.txt
 - template HTML

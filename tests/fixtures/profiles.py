@@ -3,7 +3,7 @@
 import os
 
 from lib.selectors.base import StaticSelector, MemorySelector
-from lib.selectors.shortcuts import profile, absnode
+from lib.shortcuts import profile, absnode
 
 
 schema = {
