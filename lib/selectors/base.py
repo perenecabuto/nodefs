@@ -97,7 +97,7 @@ class MemorySelector(Selector):
         ]
 
     def matches_node_pattern(self, abstract_node, pattern):
-        return pattern in self.cached_nodes.keys()
+        return True
 
     def read_node_contents(self, node, size=-1, offset=0):
         return self.cached_nodes.get(node.pattern, '')

@@ -54,6 +54,6 @@ class FunctionalTest(unittest.TestCase):
         self.assertIn(new_node, node.children)
 
         new_node.write_contents("test file contents")
-
         gotten_node_contents = self.node_manager.search_by_path(new_node.path).contents
+
         self.assertEqual(new_node.contents, gotten_node_contents)
