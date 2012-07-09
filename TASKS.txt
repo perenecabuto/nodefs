@@ -11,12 +11,23 @@
 
 - django model fs
     - Estrutura base - ok
-    - Descobrir caminhos para outros models
-    - Consulta aninhada
+    - Descobrir caminhos para outros models - ok
+    - Consulta aninhada - ok
+    - Pré filtro
     - Nó arquivo
     - adicionar nó
+    - command para montar fs
+    - association_path
+
+- montar proj django base para simular configuracao basica
+
+- dynamic_selector
+  - deve ser possível executar comandos python na projecao
 
 - montar lista proposta no GO.txt
 - template HTML
 - eventos para: crud de arquivo, atualizacao, ...
 - NotificationSelector (pega mensagens de um nó e projeta como notification.txt)
+- completar testes de unidade
+- por texto em todos os testes
+- documentar utilizacao
