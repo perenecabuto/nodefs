@@ -75,13 +75,10 @@ class AbstractNode(object):
         abstract_node = None
         abstract_nodes = self.abstract_nodes_by_weight(only_writables=only_writables)
 
-        if len(abstract_nodes) == 1:
-            abstract_node = self.abstract_nodes[0]
-        else:
-            for an in abstract_nodes:
-                if an.matches_node_pattern(pattern):
-                    abstract_node = an
-                    break
+        for an in abstract_nodes:
+            if an.matches_node_pattern(pattern):
+                abstract_node = an
+                break
 
         return abstract_node
 
@@ -148,6 +145,9 @@ class Node(object):
 
     def __eq__(self, other):
         return isinstance(other, Node) and self.id == other.id
+
+    def __hash__(self):
+        return hash(self.id)
 
     @property
     def id(self):
