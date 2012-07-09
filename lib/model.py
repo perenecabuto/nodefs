@@ -63,11 +63,7 @@ class AbstractNode(object):
     def abstract_nodes_by_weight(self, only_writables=False):
         from operator import attrgetter
 
-        abstract_nodes = [
-            abn
-            for abn in self.abstract_nodes
-            if not only_writables or abn.writable == only_writables
-        ]
+        abstract_nodes = [abn for abn in self.abstract_nodes if not only_writables or abn.writable == only_writables]
 
         return sorted(abstract_nodes, key=attrgetter('weight'))
 
