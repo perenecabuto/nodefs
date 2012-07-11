@@ -103,7 +103,7 @@ class AbstractNode(object):
 
     def write_node_contents(self, node, data, reset=False):
         if not self.selector.is_leaf_generator:
-            raise TypeError("Node(%s) is not writable" % node)
+            raise TypeError("Node(%s) is not writable, 'cause selector.is_leaf_generator is false" % node)
 
         return self.selector.write_node_contents(node, data, reset)
 
