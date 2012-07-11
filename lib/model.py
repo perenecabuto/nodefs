@@ -126,9 +126,15 @@ class Node(object):
     is_root = False
     is_leaf = False
 
-    def __init__(self, pattern, parent, abstract_node, is_root=False, is_leaf=False):
+    def __init__(self, pattern, abstract_node, parent=None, is_root=False, is_leaf=False):
         if not isinstance(abstract_node, AbstractNode):
             raise TypeError('abstract_node should be an AbstractNode')
+
+        if not parent:
+            is_root = True
+
+        if is_root:
+            parent = None
 
         self.pattern = pattern
         self.parent = parent
@@ -154,7 +160,6 @@ class Node(object):
 
     @property
     def path(self):
-        """docstring for path"""
         path = ''
 
         if self.parent:

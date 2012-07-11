@@ -13,11 +13,13 @@
     - Estrutura base - ok
     - Descobrir caminhos para outros models - ok
     - Consulta aninhada - ok
-    - Pré filtro
-    - Nó arquivo
-    - adicionar nó
+    - Pré filtro - ok
+    - Nó arquivo - ok
+    - adicionar nó - ok
+    - remover arquivos
     - command para montar fs
     - association_path
+    - criar dinamicamente nó a partir do parametros filtrados
 
 - montar proj django base para simular configuracao basica
 
