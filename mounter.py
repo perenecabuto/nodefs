@@ -10,7 +10,8 @@ from lib.fs import NodeFS
 NODEFS_PROFILE_MODULE = os.environ.get('NODEFS_PROFILE_MODULE') or 'nodefs_schema'
 
 try:
-    profile = __import__(NODEFS_PROFILE_MODULE)
+    __import__(NODEFS_PROFILE_MODULE)
+    profile = sys.modules[NODEFS_PROFILE_MODULE]
 except ImportError:
     print """
         You need to set you nodefs schema module.

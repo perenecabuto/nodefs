@@ -9,7 +9,7 @@ from fuse import FuseOSError
 from fuse import Operations
 from fuse import LoggingMixIn
 
-from lib.model import NodeManager
+from model import NodeManager
 
 
 class NodeFS(Operations, LoggingMixIn):
