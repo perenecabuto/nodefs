@@ -5,3 +5,4 @@ ipython==0.12.1
 mock==0.8.0
 pyrg==0.2.6
 wsgiref==0.1.2
+fusepy==2.0

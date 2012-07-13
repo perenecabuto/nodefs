@@ -1,4 +1,4 @@
-node_fs
+nodefs
 =======
 
 Generic fuse fs mapper for any purpose

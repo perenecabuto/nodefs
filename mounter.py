@@ -2,14 +2,26 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import os
 from fuse import FUSE
 
 from lib.fs import NodeFS
 
-from tests.fixtures import profiles
+NODEFS_PROFILE_MODULE = os.environ.get('NODEFS_PROFILE_MODULE') or 'nodefs_schema'
+
+try:
+    profile = __import__(NODEFS_PROFILE_MODULE)
+except ImportError:
+    print """
+        You need to set you nodefs schema module.
+        It can be a nodefs_schema.py on the the root of your django project (by convinience)
+        or it can be set by an export NODEFS_PROFILE_MODULE=my.beautiful.nodefs_schema on shell
+    """
+    sys.exit(1)
+
 from lib import conf
 
-conf.node_profiles = profiles.schema
+conf.node_profiles = profile.schema
 
 
 def mount(path):
