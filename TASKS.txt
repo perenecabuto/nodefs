@@ -17,15 +17,18 @@
     - Nó arquivo - ok
     - adicionar nó - ok
     - remover arquivos
-    - RESOLVER PROBLEMA DE NÓS QUE NÃO EXISTEM
+    - RESOLVER PROBLEMA DE NÓS QUE NÃO EXISTEM - ok
     - command para montar fs - ok
     - association_path
-    - criar dinamicamente nó a partir do parametros filtrados
+    - criar dinamicamente nó a partir de parametros filtrados
 
 - montar proj django base para simular configuracao basica
 
 - dynamic_selector
   - deve ser possível executar comandos python na projecao
+
+- custom selector
+  - Permite injetar/implementar metodos do selector diretamente na declaracao do esquema
 
 - montar lista proposta no GO.txt
 - template HTML
