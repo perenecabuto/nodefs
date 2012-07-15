@@ -12,7 +12,7 @@ class Selector(object):
     def get_nodes(self, abstract_node, node=None):
         raise NotImplemented("You must implement get nodes to retrieve nodes from somewhere")
 
-    def matches_node_pattern(self, abstract_node, pattern):
+    def matches_node_pattern(self, parent_node, pattern):
         raise NotImplemented("You must implement matches_node_pattern to check if the pattern can be from this selector")
 
     def read_node_contents(self, node, mode):
@@ -41,7 +41,7 @@ class StaticSelector(Selector):
     def __str__(self):
         return type(self).__name__
 
-    def matches_node_pattern(self, abstract_node, pattern):
+    def matches_node_pattern(self, parent_node, pattern):
         return pattern == self.projection
 
     def get_nodes(self, abstract_node, node=None):
@@ -96,7 +96,7 @@ class MemorySelector(Selector):
             for p in self.cached_nodes.keys()
         ]
 
-    def matches_node_pattern(self, abstract_node, pattern):
+    def matches_node_pattern(self, parent_node, pattern):
         return True
 
     def read_node_contents(self, node, size=-1, offset=0):

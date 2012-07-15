@@ -34,7 +34,7 @@ class TestNode(unittest.TestCase):
 
     def test_build_child(self):
         Node(pattern='folder', parent=self.root_node, abstract_node=self.abstract_node)
-        self.abstract_node.match_child = lambda obj: self.abstract_node
+        self.abstract_node.match_child = lambda node, pattern: self.abstract_node
 
         self.assertIsInstance(self.root_node.build_child('folder'), Node)
 

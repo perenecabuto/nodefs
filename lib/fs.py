@@ -25,7 +25,7 @@ class NodeFS(Operations, LoggingMixIn):
         splitted_path = path.split("/")
         node_path = "/".join(splitted_path[:-1])
         pattern = splitted_path[-1]
-        node = self.node_manager.search_by_path(node_path)
+        node = self.node_manager.build_by_path(node_path)
         node.create_child_by_pattern(pattern, is_leaf=True)
 
         return node.id
@@ -50,7 +50,7 @@ class NodeFS(Operations, LoggingMixIn):
         print "readdir path:", path
 
         dir_content = ['.', '..']
-        node = self.node_manager.search_by_path(path)
+        node = self.node_manager.build_by_path(path)
 
         dir_content += [n.pattern for n in node.children]
 
@@ -58,14 +58,14 @@ class NodeFS(Operations, LoggingMixIn):
 
     def read(self, path, size, offset, fh):
         print "read ", path, " ", size, " ", offset, " ", fh
-        node = self.node_manager.search_by_path(path)
+        node = self.node_manager.build_by_path(path)
 
         return node.read_contents(size, offset)
 
     def write(self, path, data, offset, fh):
         print "write ", path, " ", offset, " ", fh
 
-        node = self.node_manager.search_by_path(path)
+        node = self.node_manager.build_by_path(path)
         node.write_contents(data, reset=offset == 0)
 
         return len(data)
@@ -90,7 +90,7 @@ class NodeFS(Operations, LoggingMixIn):
         splitted_path = path.split("/")
         node_path = "/".join(splitted_path[:-1])
         pattern = splitted_path[-1]
-        node = self.node_manager.search_by_path(node_path)
+        node = self.node_manager.build_by_path(node_path)
         node.create_child_by_pattern(pattern, is_leaf=False)
 
     def unlink(self, path):

@@ -1,6 +1,6 @@
 - montar fs
-    - passar parametro para definir o esquema de montagem
-      - export NODEFS_PROFILE_PATH=profile
+    - passar parametro para definir o esquema de montagem - ok
+      - export NODEFS_PROFILE_PATH=profile - ok
 
 - abrir arquivos - ok
     - ler - ok
@@ -17,7 +17,8 @@
     - Nó arquivo - ok
     - adicionar nó - ok
     - remover arquivos
-    - command para montar fs
+    - RESOLVER PROBLEMA DE NÓS QUE NÃO EXISTEM
+    - command para montar fs - ok
     - association_path
     - criar dinamicamente nó a partir do parametros filtrados
 

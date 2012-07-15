@@ -3,15 +3,21 @@
 import os
 import conf
 import re
-from memoize import Memoizer
+#from memoize import Memoizer
 
-store = {}
-memo = Memoizer(store)
+#store = {}
+#memo = Memoizer(store)
 
 
 class NodeManager(object):
 
     def search_by_path(self, path):
+        node = self.build_by_path(path)
+
+        if node and node.parent and node in node.parent.children:
+            return node
+
+    def build_by_path(self, path):
         node = None
         node = conf.get_root_node()
         path = re.sub("^%s+" % re.escape(os.sep), "", path + os.sep)
@@ -67,19 +73,19 @@ class AbstractNode(object):
 
         return sorted(abstract_nodes, key=attrgetter('weight'))
 
-    def match_child(self, pattern, only_writables=False):
+    def match_child(self, parent_node, pattern, only_writables=False):
         abstract_node = None
         abstract_nodes = self.abstract_nodes_by_weight(only_writables=only_writables)
 
         for an in abstract_nodes:
-            if an.matches_node_pattern(pattern):
+            if an.matches_node_pattern(parent_node, pattern):
                 abstract_node = an
                 break
 
         return abstract_node
 
-    def matches_node_pattern(self, pattern):
-        return self.selector.matches_node_pattern(self, pattern)
+    def matches_node_pattern(self, parent_node, pattern):
+        return self.selector.matches_node_pattern(parent_node, pattern)
 
     def get_children_of_node(self, node):
         nodes = []
@@ -153,10 +159,7 @@ class Node(object):
 
     @property
     def id(self):
-        if not hasattr(self, '_id'):
-            self._id = long("".join(str(int(ord(l))) for l in list(self.path)))
-
-        return self._id
+        return long("".join(str(int(ord(l))) for l in tuple(self.path)))
 
     @property
     def path(self):
@@ -183,7 +186,7 @@ class Node(object):
         return self.read_contents()
 
     def build_child(self, pattern):
-        abstract_node = self.abstract_node.match_child(pattern)
+        abstract_node = self.abstract_node.match_child(self, pattern)
 
         if not abstract_node:
             return None
@@ -196,14 +199,14 @@ class Node(object):
     def write_contents(self, data, reset=False):
         self.abstract_node.write_node_contents(self, data, reset)
 
-    def create_child_by_pattern(self, pattern, is_leaf=True):
-        abstract_node = self.abstract_node.match_child(pattern, only_writables=True)
+    def create_child_by_pattern(self, pattern):
+        abstract_node = self.abstract_node.match_child(self, pattern, only_writables=True)
 
         if not abstract_node:
             return None
 
+        # TODO melhorar esta logica de verificacao de folhas, pq nao deve ser possivel criar um noh folha para um selector que nao eh gerador de folhas
         node = Node(parent=self, pattern=pattern, abstract_node=abstract_node, is_leaf=abstract_node.is_leaf_generator)
-        node.is_leaf = is_leaf
-        self.abstract_node.add_node(node)
+        abstract_node.add_node(node)
 
         return node

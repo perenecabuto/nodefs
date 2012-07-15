@@ -28,7 +28,7 @@ conf.node_profiles = profile.schema
 def mount(path):
     """docstring for mount"""
 
-    FUSE(NodeFS(), path, foreground=True, nothreads=True)
+    FUSE(NodeFS(), path, foreground=True, nothreads=False, nonempty=True)
 
 
 if __name__ == '__main__':

@@ -23,14 +23,14 @@ class FunctionalTest(unittest.TestCase):
     def test_get_root_node_from_path(self):
         """Ao passar o path raiz deve retornar o root node"""
 
-        node = self.node_manager.search_by_path('/')
+        node = self.node_manager.build_by_path('/')
         self.assertIsInstance(node, Node)
         self.assertTrue(node.is_root)
 
     def test_list_root_node_from_path(self):
         """Ao passar o path raiz deve retornar um array com seus nodes filhos"""
 
-        node = self.node_manager.search_by_path('/')
+        node = self.node_manager.build_by_path('/')
         self.assertIsInstance(node, Node)
         self.assertIsInstance(node.children, list)
         self.assertGreater(len(node.children), 0)
@@ -48,7 +48,7 @@ class FunctionalTest(unittest.TestCase):
         self.assertEqual(node.read_contents(), 'this is the content of contentfile.txt\n')
 
     def test_add_file(self):
-        node = self.node_manager.search_by_path('/folder_1/folder_1.1/')
+        node = self.node_manager.build_by_path('/folder_1/folder_1.1/')
 
         new_node = node.create_child_by_pattern('test_file_1.txt')
         self.assertIn(new_node, node.children)
