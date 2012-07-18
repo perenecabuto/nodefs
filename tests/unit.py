@@ -30,7 +30,7 @@ class TestNode(unittest.TestCase):
 
     def test_path(self):
         node = Node(pattern='folder', parent=self.root_node, abstract_node=self.abstract_node)
-        self.assertIsInstance(node.path, str)
+        self.assertIsInstance(node.path, unicode)
 
     def test_build_child(self):
         Node(pattern='folder', parent=self.root_node, abstract_node=self.abstract_node)

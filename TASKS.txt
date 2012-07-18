@@ -1,6 +1,7 @@
 - montar fs
     - passar parametro para definir o esquema de montagem - ok
-      - export NODEFS_PROFILE_PATH=profile - ok
+    - export NODEFS_PROFILE_PATH=profile - ok
+    - administrar daemon: start, stop, ...
 
 - abrir arquivos - ok
     - ler - ok
@@ -19,13 +20,21 @@
     - RESOLVER PROBLEMA DE NÓS QUE NÃO EXISTEM - ok
     - command para montar fs - ok
     - consultas pre-definidas - ok
+
+    # PODEM ESPERAR
     - remover arquivos
     - association_path
     - subprocess mount test
     - criar dinamicamente nó a partir de parametros filtrados
+    - otimizar select, selecionando somente o campo utilizado na projecao e fazendo distinct
 
-- montar proj django base para simular configuracao basica
+- montar proj django base para simular configuracao basica - ok
+
 - montar lista proposta no GO.txt
+    - Corrigir bug que faz com que nós filtrados não considerem queryset customizadas (QuerySetSelector)
+      O problema está na implementação de get_query_set, que isola a logica de implementacao,
+      fazendo que filter tenha q ser sobre escrito
+
 - template HTML
 - documentar utilizacao
 
