@@ -15,7 +15,7 @@ class NodeManager(object):
     def search_by_path(self, path):
         node = self.build_by_path(path)
 
-        if node and node.parent and node in node.parent.children:
+        if node and (node.is_root or node.parent and node in node.parent.children):
             return node
 
     def build_by_path(self, path):
