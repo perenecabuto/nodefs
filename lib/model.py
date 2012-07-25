@@ -67,16 +67,16 @@ class AbstractNode(object):
     def weight(self):
         return self.selector.weight
 
-    def abstract_nodes_by_weight(self, only_writables=False):
+    def abstract_nodes_by_weight(self):
         from operator import attrgetter
 
-        abstract_nodes = [abn for abn in self.abstract_nodes if not only_writables or abn.writable == only_writables]
+        abstract_nodes = [abn for abn in self.abstract_nodes]
 
         return sorted(abstract_nodes, key=attrgetter('weight'))
 
-    def match_child(self, parent_node, pattern, only_writables=False):
+    def match_child(self, parent_node, pattern):
         abstract_node = None
-        abstract_nodes = self.abstract_nodes_by_weight(only_writables=only_writables)
+        abstract_nodes = self.abstract_nodes_by_weight()
 
         for an in abstract_nodes:
             if an.matches_node_pattern(parent_node, pattern):
@@ -201,10 +201,13 @@ class Node(object):
         self.abstract_node.write_node_contents(self, data, reset)
 
     def create_child_by_pattern(self, pattern):
-        abstract_node = self.abstract_node.match_child(self, pattern, only_writables=True)
+        abstract_node = self.abstract_node.match_child(self, pattern)
+
+        if not abstract_node.writable:
+            raise Exception("Abstractnode(%s) of node (%s) is not writable" % (abstract_node.selector.projection, self.path))
 
         if not abstract_node:
-            return None
+            raise Exception("No abstract node found for node (%s)" % self.path)
 
         # TODO melhorar esta logica de verificacao de folhas, pq nao deve ser possivel criar um noh folha para um selector que nao eh gerador de folhas
         node = Node(parent=self, pattern=pattern, abstract_node=abstract_node, is_leaf=abstract_node.is_leaf_generator)
