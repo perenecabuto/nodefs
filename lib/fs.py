@@ -26,7 +26,7 @@ class NodeFS(Operations, LoggingMixIn):
         node_path = "/".join(splitted_path[:-1])
         pattern = splitted_path[-1]
         node = self.node_manager.build_by_path(node_path)
-        node.create_child_by_pattern(pattern, is_leaf=True)
+        node.create_child_by_pattern(pattern)
 
         return node.id
 
