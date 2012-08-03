@@ -106,6 +106,11 @@ class AbstractNode(object):
         return self.selector.node_contents_length(node)
 
     def get_nodes(self, parent_node):
+        from selectors import Selector
+
+        if not isinstance(self.selector, Selector):
+            raise TypeError("The selector(%s) should by a type of %s" % (type(self.selector), Selector))
+
         return self.selector.get_nodes(self, parent_node)
 
     def write_node_contents(self, node, data, reset=False):
@@ -202,6 +207,9 @@ class Node(object):
 
     def create_child_by_pattern(self, pattern):
         abstract_node = self.abstract_node.match_child(self, pattern)
+
+        if not abstract_node:
+            raise Exception("Could not find abstract node for %s%s" % (self.path, pattern))
 
         if not abstract_node.writable:
             raise Exception("Abstractnode(%s) of node (%s) is not writable" % (abstract_node.selector.projection, self.path))

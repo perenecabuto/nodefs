@@ -31,7 +31,7 @@
 - montar proj django base para simular configuracao basica - ok
 
 - montar lista proposta no GO.txt
-    - Corrigir bug que faz com que nós filtrados não considerem queryset customizadas (QuerySetSelector)
+    - Corrigir bug que faz com que nós filtrados não considerem queryset customizadas (QuerySetSelector) - ok
       O problema está na implementação de get_query_set, que isola a logica de implementacao,
       fazendo que filter tenha q ser sobre escrito
 

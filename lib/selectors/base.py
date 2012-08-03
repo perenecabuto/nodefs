@@ -10,7 +10,7 @@ class Selector(object):
     is_leaf_generator = False
 
     def get_nodes(self, abstract_node, node=None):
-        raise NotImplemented("You must implement get nodes to retrieve nodes from somewhere")
+        raise NotImplemented("You must implement get_nodes(abstract_node, node=None) to retrieve nodes from somewhere")
 
     def matches_node_pattern(self, parent_node, pattern):
         raise NotImplemented("You must implement matches_node_pattern to check if the pattern can be from this selector")

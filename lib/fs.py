@@ -34,7 +34,12 @@ class NodeFS(Operations, LoggingMixIn):
         print "getattr path: %s, fh: %s" % (path, fh)
 
         now = time()
-        node = self.node_manager.search_by_path(path)
+        node = None
+
+        try:
+            node = self.node_manager.search_by_path(path)
+        except TypeError:
+            pass
 
         if node:
             if node.is_leaf:
@@ -91,7 +96,7 @@ class NodeFS(Operations, LoggingMixIn):
         node_path = "/".join(splitted_path[:-1])
         pattern = splitted_path[-1]
         node = self.node_manager.build_by_path(node_path)
-        node.create_child_by_pattern(pattern, is_leaf=False)
+        node.create_child_by_pattern(pattern)
 
     def unlink(self, path):
         print "unlink"

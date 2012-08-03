@@ -1,7 +1,7 @@
 # 1
 Deve ter um comando tree que imprime uma lista como a que segue abaixo
 
-├── mes_atual/
+├── deste_mes/
 |   ├── aluguel (pago)/
 |   | └── bervel_xxx.pdf
 |   ├── celular (vence dia 3)/
@@ -10,7 +10,7 @@ Deve ter um comando tree que imprime uma lista como a que segue abaixo
 |   | └── nao_possui_controle_de_arquivo.txt
 |   └── telefone (aguardando carregamento de arquivo)/
 |
-└── mes_anteior (maio)/
+└── mes_passado/
   └── abril/
     ├── aluguel (pago)/
     | ├── report.txt
