@@ -86,8 +86,9 @@ class NodeFS(Operations, LoggingMixIn):
 
     def statfs(self, path):
         print "statfs"
+        # Pegar stat real do sistema de arquivos
 
-        return dict(f_bsize=512, f_blocks=4096, f_bavail=2048)
+        return dict(f_bsize=512, f_blocks=4096, f_bavail=106524887L)
 
     def mkdir(self, path, mode):
         print "mkdir ", path, " ", mode
