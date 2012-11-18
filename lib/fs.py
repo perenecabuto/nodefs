@@ -34,22 +34,17 @@ class NodeFS(Operations, LoggingMixIn):
         print "getattr path: %s, fh: %s" % (path, fh)
 
         now = time()
-        node = None
+        node = self.node_manager.search_by_path(path)
 
-        try:
-            node = self.node_manager.search_by_path(path)
-        except TypeError:
-            pass
+        if not node:
+            raise FuseOSError(ENOENT)
 
-        if node:
-            if node.is_leaf:
-                # File
-                return dict(st_mode=(S_IFREG | 0o644), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1, st_size=node.contents_length)
-            else:
-                # Dir
-                return dict(st_mode=(S_IFDIR | 0o755), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=2)
-
-        raise FuseOSError(ENOENT)
+        if node.is_leaf:
+            # File
+            return dict(st_mode=(S_IFREG | 0o644), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=1, st_size=node.contents_length)
+        else:
+            # Dir
+            return dict(st_mode=(S_IFDIR | 0o755), st_ctime=now, st_mtime=now, st_atime=now, st_nlink=2)
 
     def readdir(self, path, fh):
         print "readdir path:", path
