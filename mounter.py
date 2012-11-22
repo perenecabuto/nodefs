@@ -4,14 +4,14 @@
 import sys
 import os
 from fuse import FUSE
-import logging
-logging.basicConfig(level=logging.INFO)
+
+#import logging
+#logging.basicConfig(level=logging.INFO)
 
 from lib.fs import NodeFS
 
 NODEFS_PROFILE_MODULE = os.environ.get('NODEFS_PROFILE_MODULE') or 'nodefs_schema'
 
-#sys.path.append(os.path.abspath('.'))
 
 try:
     __import__(NODEFS_PROFILE_MODULE)
@@ -34,13 +34,12 @@ conf.node_profiles = profile.schema
 
 
 def mount(path):
-    """docstring for mount"""
-
     FUSE(NodeFS(), path, foreground=True, nothreads=False, nonempty=True)
 
 
-def do_mount():
+def main():
     args = sys.argv[1:]
+
     if not args:
         print 'usage: %s <mountpoint>' % sys.argv[0]
         exit(1)
@@ -50,5 +49,7 @@ def do_mount():
     print " * Mounting FS on %s" % path
     mount(path)
 
+
 if __name__ == '__main__':
-    do_mount()
+    main()
+
