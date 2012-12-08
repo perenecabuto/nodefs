@@ -8,6 +8,7 @@ PROJECT_DIR = os.path.dirname(__file__)
 setup(
     name='nodefs',
     version='0.3-beta',
+    scripts=['nodefs/mounter.py'],
     url='https://github.com/perenecabuto/nodefs.git',
     author="Felipe Ramos",
     author_email="perenecabuto@gmail.com",
