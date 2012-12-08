@@ -1,7 +1,10 @@
 *.swp
-media/*/*
+#media/*/*
+tests/fixtures/static/*
 log/*
 *.py[co]
 build
 pip-log.txt
-mnt/*
+*.sqlite3
+dist/
+*.egg-info/
