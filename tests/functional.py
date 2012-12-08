@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from lib.model import NodeManager
-from lib.model import Node
-from lib.model import NodeProfile
-from tests.fixtures import profiles
-from lib import conf
+
+from nodefs.lib.model import NodeManager
+from nodefs.lib.model import Node
+from nodefs.lib.model import NodeProfile
+from nodefs.lib import conf
+
+from .fixtures import profiles
 
 conf.node_profiles = profiles.schema
 

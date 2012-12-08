@@ -48,4 +48,5 @@
   - Permite injetar/implementar metodos do selector diretamente na declaracao do esquema
 
 - completar testes de unidade
-- por texto em todos os testes
+- por descricao em todos os testes
+

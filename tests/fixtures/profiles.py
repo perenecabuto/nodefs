@@ -2,8 +2,8 @@
 
 import os
 
-from lib.selectors.base import StaticSelector, MemorySelector
-from lib.shortcuts import profile, absnode
+from nodefs.lib.selectors.base import StaticSelector, MemorySelector
+from nodefs.lib.shortcuts import profile, absnode
 
 
 schema = {

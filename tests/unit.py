@@ -4,9 +4,9 @@ import unittest
 from mock import mocksignature
 from fuse import Operations
 
-from lib.model import Node, AbstractNode, NodeProfile
-from lib.selectors.base import StaticSelector
-from lib.fs import NodeFS
+from nodefs.lib.model import Node, AbstractNode, NodeProfile
+from nodefs.lib.selectors.base import StaticSelector
+from nodefs.lib.fs import NodeFS
 
 
 class TestNode(unittest.TestCase):
